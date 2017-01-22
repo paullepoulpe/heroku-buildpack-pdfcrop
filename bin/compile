@@ -28,7 +28,7 @@ if [ ! -d "$BUILD_DIR"/.heroku/pdfcrop ]; then
   unzip "$ARCHIVE" -d "$BUILD_DIR"/.heroku
   cd "$BUILD_DIR"/.heroku/pdfcrop 
   ln -s pdfcrop.pl pdfcrop
-  chod +x pdfcrop
+  chmod +x pdfcrop
 fi
 
 
