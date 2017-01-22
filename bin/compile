@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+# Script arguments
+BUILD_DIR="$1" # Build dir of the app
+CACHE_DIR="$2" # Survives between builds, can be used to store build artifacts
+ENV_DIR="$3" # Heroku config variables
+
+header() { sed 's/^/-----> /'; }
+indent() { sed 's/^/       /'; }
+
+
+ARCHIVE="pdfcrop.zip"
+URL="wget http://mirrors.ctan.org/support/$ARCHIVE"
+
+# Download
+if [ ! -f "$CACHE_DIR"/"$ARCHIVE" ]; then
+  echo "Downloading $ARCHIVE" | indent
+  wget "$URL" -O "$CACHE_DIR"/"$ARCHIVE" | indent
+else
+  echo "Reusing already downloaded version of $ARCHIVE" | indent
+fi
+
+# Extract
+if [ ! -d "$CACHE_DIR"/pdfcrop ]; then
+  echo "Extracting archive" | indent
+  cd "$CACHE_DIR"
+  unzip "$ARCHIVE" -d "$BUILD_DIR"/.heroku/pdfcrop 
+  cd "$BUILD_DIR"/.heroku/pdfcrop 
+  ln -s pdfcrop.pl pdfcrop
+fi
+
+
+# Setup profile.d script to add pdfcrop to path
+mkdir -p "$BUILD_DIR"/.profile.d
+(
+  echo 'PATH=/app/.heroku/pdfcrop:$PATH'
+) > "$BUILD_DIR"/.profile.d/pdfcrop.sh
+
+echo "pdfcrop installed and added to path" | header
+echo
+
