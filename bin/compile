@@ -10,7 +10,7 @@ indent() { sed 's/^/       /'; }
 
 
 ARCHIVE="pdfcrop.zip"
-URL="wget http://mirrors.ctan.org/support/$ARCHIVE"
+URL="http://mirrors.ctan.org/support/$ARCHIVE"
 
 # Download
 if [ ! -f "$CACHE_DIR"/"$ARCHIVE" ]; then
